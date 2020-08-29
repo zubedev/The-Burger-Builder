@@ -93,6 +93,10 @@ class BurgerBuilder extends React.Component {
         this.setState({isOrdering: false})
     }
 
+    continueOrderingHandler = () => {
+        alert('Continue with Order');
+    }
+
     render() {
         // check if any build control button needs to be disabled
         const buttonsRemDisabled = {...this.state.ingredients};
@@ -110,7 +114,11 @@ class BurgerBuilder extends React.Component {
                     show={this.state.isOrdering}
                     dismiss={this.cancelOrderingHandler}
                 >
-                    <OrderSummary ingredients={this.state.ingredients}/>
+                    <OrderSummary
+                        ingredients={this.state.ingredients}
+                        clickCancel={this.cancelOrderingHandler}
+                        clickContinue={this.continueOrderingHandler}
+                    />
                 </Modal>
                 <Burger ingredients={this.state.ingredients} />
                 <BuildControls
