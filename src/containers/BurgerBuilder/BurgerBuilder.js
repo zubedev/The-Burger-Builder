@@ -19,6 +19,18 @@ class BurgerBuilder extends React.Component {
             meat: 0,
         },
         totalPrice: 4,
+        canOrder: false,
+    }
+
+    updateCanOrderState(ingredients) {
+        const sum = Object.keys(ingredients)
+            .map(ingredient => {
+                return ingredients[ingredient];
+            })
+            .reduce((sum, element) => {
+                return sum + element;
+            }, 0);
+        this.setState({canOrder: sum > 0})
     }
 
     addIngredientHandler = type => {
@@ -38,7 +50,10 @@ class BurgerBuilder extends React.Component {
         this.setState({
             ingredients: updatedIngredients,
             totalPrice: newPrice,
-        })
+        });
+
+        // update Order Now button state
+        this.updateCanOrderState(updatedIngredients);
     }
 
     remIngredientHandler = type => {
@@ -61,7 +76,10 @@ class BurgerBuilder extends React.Component {
         this.setState({
             ingredients: updatedIngredients,
             totalPrice: newPrice,
-        })
+        });
+
+        // update Order Now button state
+        this.updateCanOrderState(updatedIngredients);
     }
 
     render() {
@@ -84,6 +102,7 @@ class BurgerBuilder extends React.Component {
                     remIngredient={this.remIngredientHandler}
                     buttonsRemDisabled={buttonsRemDisabled}
                     buttonsAddDisabled={buttonsAddDisabled}
+                    canOrder={this.state.canOrder}
                 />
             </Aux>
         );
