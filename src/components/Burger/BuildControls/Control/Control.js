@@ -4,8 +4,16 @@ import classes from "./Control.module.css";
 const control = props => (
     <div className={classes.BuildControl}>
         <div className={classes.Label}>{props.label}</div>
-        <button className={classes.Less}>Less</button>
-        <button className={classes.More}>More</button>
+        <button  // remove ingredient
+            className={classes.Less}
+            onClick={props.less}
+            disabled={props.remDisabled}
+        >Less</button>
+        <button  // add ingredient
+            className={classes.More}
+            onClick={props.more}
+            disabled={props.addDisabled}
+        >More</button>
     </div>
 );
 

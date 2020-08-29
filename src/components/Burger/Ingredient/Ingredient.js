@@ -18,17 +18,17 @@ class Ingredient extends React.Component {
                     </div>
                 );
                 break;
-            case ("meat"):
-                ingredient = <div className={classes.Meat} />;
-                break;
-            case ("cheese"):
-                ingredient = <div className={classes.Cheese} />;
+            case ("salad"):
+                ingredient = <div className={classes.Salad} />;
                 break;
             case ("bacon"):
                 ingredient = <div className={classes.Bacon} />;
                 break;
-            case ("salad"):
-                ingredient = <div className={classes.Salad} />;
+            case ("cheese"):
+                ingredient = <div className={classes.Cheese} />;
+                break;
+            case ("meat"):
+                ingredient = <div className={classes.Meat} />;
                 break;
             default:
                 ingredient = null;
