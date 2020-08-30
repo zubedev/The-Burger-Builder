@@ -4,18 +4,10 @@ import Backdrop from "../Backdrop/Backdrop";
 import classes from "./Modal.module.css";
 
 const modal = props => (
-    <Aux>
+    props.show ? <Aux>
         <Backdrop show={props.show} click={props.dismiss} />
-        <div
-            className={classes.Modal}
-            style={{
-                transform: props.show ? 'transformY(0)' : "transformY(-100vh)",
-                opacity: props.show ? '1' : 0,
-            }}
-        >
-            {props.children}
-        </div>
-    </Aux>
+        <div className={classes.Modal}>{props.children}</div>
+    </Aux> : null
 );
 
 export default modal;
