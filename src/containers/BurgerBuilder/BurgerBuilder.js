@@ -17,16 +17,20 @@ const INGREDIENT_PRICES = {
 
 class BurgerBuilder extends React.Component {
     state = {
-        ingredients : {
-            salad: 0,
-            bacon: 0,
-            cheese: 0,
-            meat: 0,
-        },
+        ingredients : null,
         totalPrice: 4,
         canOrder: false,
         isOrdering: false,
         loading: false,
+        error: false,
+    }
+
+    componentDidMount() {
+        axios.get("ingredients.json").then(response => {
+            this.setState({ingredients: response.data})
+        }).catch(error => {
+            this.setState({error: true})
+        })
     }
 
     updateCanOrderState(ingredients) {
@@ -114,9 +118,9 @@ class BurgerBuilder extends React.Component {
             },
             deliveryMode: "fastest",
         }
-        axios.post("orders", order).then(response => {
+        axios.post("orders.json", order).then(() => {
             this.setState({loading: false, isOrdering: false})
-        }).catch(error => {
+        }).catch(() => {
             this.setState({loading: false, isOrdering: false})
         });
     }
@@ -143,6 +147,27 @@ class BurgerBuilder extends React.Component {
             orderSummary = <Spinner />;
         }
 
+        // check if ingredients are loaded else show spinner
+        let burgerBuilder = this.state.error
+            ? <p>The Burger Builder can not be loaded, something went wrong!</p>
+            : <Spinner />
+        if (this.state.ingredients) {
+            burgerBuilder = (
+                <Aux>
+                    <Burger ingredients={this.state.ingredients} />
+                    <BuildControls
+                        totalPrice={this.state.totalPrice}
+                        addIngredient={this.addIngredientHandler}
+                        remIngredient={this.remIngredientHandler}
+                        buttonsRemDisabled={buttonsRemDisabled}
+                        buttonsAddDisabled={buttonsAddDisabled}
+                        canOrder={this.state.canOrder}
+                        clickOrder={this.isOrderingHandler}
+                    />
+                </Aux>
+            )
+        }
+
         return (
             <Aux>
                 <Modal
@@ -151,16 +176,7 @@ class BurgerBuilder extends React.Component {
                 >
                     {orderSummary}
                 </Modal>
-                <Burger ingredients={this.state.ingredients} />
-                <BuildControls
-                    totalPrice={this.state.totalPrice}
-                    addIngredient={this.addIngredientHandler}
-                    remIngredient={this.remIngredientHandler}
-                    buttonsRemDisabled={buttonsRemDisabled}
-                    buttonsAddDisabled={buttonsAddDisabled}
-                    canOrder={this.state.canOrder}
-                    clickOrder={this.isOrderingHandler}
-                />
+                {burgerBuilder}
             </Aux>
         );
     }
