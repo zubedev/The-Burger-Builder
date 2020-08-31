@@ -28,7 +28,7 @@ class BurgerBuilder extends React.Component {
     componentDidMount() {
         axios.get("ingredients.json").then(response => {
             this.setState({ingredients: response.data})
-        }).catch(error => {
+        }).catch(() => {
             this.setState({error: true})
         })
     }
@@ -108,6 +108,9 @@ class BurgerBuilder extends React.Component {
                 encodeURIComponent(i) + "=" + encodeURIComponent(this.state.ingredients[i])
             )
         }
+        queryParams.push(encodeURIComponent(
+            "totalPrice") + "=" + encodeURIComponent(this.state.totalPrice.toFixed(2))
+        )
         const queryString = queryParams.join("&")
         this.props.history.push({
             pathname: "/checkout",

@@ -3,19 +3,26 @@ import {Route} from "react-router-dom";
 import CheckoutSummary from "../../components/Order/CheckoutSummary/CheckoutSummary";
 import ContactData from "./ContactData/ContactData";
 import Spinner from "../../components/UI/Spinner/Spinner";
+import axios from "../../axios-orders";
 
 class Checkout extends React.Component {
     state = {
         ingredients: null,
+        totalPrice: 0,
     }
 
     componentDidMount() {
         const query = new URLSearchParams(this.props.location.search);
         const ingredients = {};
+        let totalPrice = 0;
         for (let params of query.entries()) {
-            ingredients[params[0]] = +params[1];
+            if (params[0] === "totalPrice") {
+                totalPrice = params[1];
+            } else {
+                ingredients[params[0]] = +params[1];
+            }
         }
-        this.setState({ingredients: ingredients});
+        this.setState({ingredients: ingredients, totalPrice: totalPrice});
     }
 
     checkoutCancel = () => {
@@ -23,7 +30,7 @@ class Checkout extends React.Component {
     }
 
     checkoutContinue = () => {
-        this.props.history.replace("/checkout/contact-data");
+        this.props.history.push("/checkout/contact-data");
     }
 
     render() {
@@ -41,7 +48,13 @@ class Checkout extends React.Component {
                 {checkoutSummary}
                 <Route
                     path={this.props.match.path + "/contact-data"}
-                    component={ContactData}
+                    render={() => (
+                        <ContactData
+                            ingredients={this.state.ingredients}
+                            totalPrice={this.state.totalPrice}
+                            {...this.props}
+                        />
+                    )}
                 />
             </div>
         );
