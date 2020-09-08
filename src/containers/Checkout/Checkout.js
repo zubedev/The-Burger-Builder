@@ -3,7 +3,6 @@ import {Route} from "react-router-dom";
 import CheckoutSummary from "../../components/Order/CheckoutSummary/CheckoutSummary";
 import ContactData from "./ContactData/ContactData";
 import Spinner from "../../components/UI/Spinner/Spinner";
-import axios from "../../axios-orders";
 
 class Checkout extends React.Component {
     state = {
