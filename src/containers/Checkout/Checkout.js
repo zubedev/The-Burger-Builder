@@ -1,9 +1,8 @@
 import React from "react";
 import {connect} from "react-redux";
-import {Route} from "react-router-dom";
+import {Route, Redirect} from "react-router-dom";
 import CheckoutSummary from "../../components/Order/CheckoutSummary/CheckoutSummary";
 import ContactData from "./ContactData/ContactData";
-import Spinner from "../../components/UI/Spinner/Spinner";
 
 class Checkout extends React.Component {
     checkoutCancel = () => {
@@ -15,29 +14,35 @@ class Checkout extends React.Component {
     }
 
     render() {
-        let checkoutSummary = <Spinner />
+        let checkoutSummary = <Redirect to="/" />
         if (this.props.ings) {
-            checkoutSummary = <CheckoutSummary
-                ingredients={this.props.ings}
-                checkoutCancel={this.checkoutCancel}
-                checkoutContinue={this.checkoutContinue}
-            />
+            const purchasedRedirect = this.props.purchased
+                ? <Redirect to="/" />
+                : null
+            checkoutSummary = (
+                <div>
+                    {purchasedRedirect}
+                    <CheckoutSummary
+                        ingredients={this.props.ings}
+                        checkoutCancel={this.checkoutCancel}
+                        checkoutContinue={this.checkoutContinue}
+                    />
+                    <Route
+                        path={this.props.match.path + "/contact-data"}
+                        component={ContactData}
+                    />
+                </div>
+            );
         }
-
-        return (
-            <div>
-                {checkoutSummary}
-                <Route
-                    path={this.props.match.path + "/contact-data"}
-                    component={ContactData}
-                />
-            </div>
-        );
+        return checkoutSummary;
     }
 }
 
 const mapStateToProps = state => {
-    return {ings: state.ingredients};
+    return {
+        ings: state.burgerBuilder.ingredients,
+        purchased: state.order.purchased,
+    };
 }
 
 export default connect(mapStateToProps)(Checkout);
